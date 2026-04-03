@@ -1,7 +1,7 @@
 # Bekos.Sounds
 
 **Bekos.Sounds** is a Windows-only .NET library written in C#.
-It provides strongly-typed access to Windows system sound events and arbitrary WAV files, resolving system sound paths from the registry and playing them via `SoundPlayer`.
+It provides a unified API for playing Windows system sound events and arbitrary WAV files.
 
 > ⚠️ **Platform:** This library targets Windows only. It uses `Microsoft.Win32.Registry` and `System.Media.SoundPlayer`, neither of which are available on Linux or macOS.
 
@@ -16,7 +16,7 @@ It provides strongly-typed access to Windows system sound events and arbitrary W
 - **Disposable** — Both `Sound` and `SystemSound` implement `IDisposable` to release the underlying `SoundPlayer`.
 
 ## Details
-- Written in **C#** targeting **.NET 10**.
+- Written in **C#**.
 - Windows only — depends on `Microsoft.Win32.Registry` and `System.Media.SoundPlayer`.
 - Uses `UseWindowsForms` to bring in `System.Media` without an additional NuGet package.
 
@@ -35,6 +35,10 @@ SystemSounds.DeviceConnect.PlaySync();
 SystemSounds.Alarm1.PlayLooping();
 SystemSounds.Alarm1.Stop();
 
+// Enumerate all system sounds available on this machine
+foreach (var s in SystemSounds.GetAll())
+    Console.WriteLine($"{s.EventName} → {s.SoundName}");
+
 // Dispose when done
 SystemSounds.Error.Dispose();
 
@@ -42,12 +46,4 @@ SystemSounds.Error.Dispose();
 using var sound = new Sound(@"C:\sounds\alert.wav");
 if (sound.IsValid)
     sound.Play();
-
-// Enumerate all system sounds available on this machine
-foreach (var s in SystemSounds.GetAll())
-    Console.WriteLine($"{s.EventName} → {s.SoundName}");
-
-// Check if a sound event is assigned before using it
-if (SystemSounds.Exists("DeviceConnect"))
-    SystemSounds.DeviceConnect.Play();
 ```
