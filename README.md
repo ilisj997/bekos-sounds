@@ -22,6 +22,8 @@ It provides a unified API for playing Windows system sound events and arbitrary 
 
 ## Usage
 
+### Playing System Sounds
+
 ```csharp
 using Bekos.Sounds;
 
@@ -34,14 +36,19 @@ SystemSounds.DeviceConnect.PlaySync();
 // Loop until stopped
 SystemSounds.Alarm1.PlayLooping();
 SystemSounds.Alarm1.Stop();
+```
 
+### Enumerating Available Sounds
+
+```csharp
 // Enumerate all system sounds available on this machine
 foreach (var s in SystemSounds.GetAll())
     Console.WriteLine($"{s.EventName} → {s.SoundName}");
+```
 
-// Dispose when done
-SystemSounds.Error.Dispose();
+### Playing Custom WAV Files
 
+```csharp
 // Play any WAV file by path
 using var sound = new Sound(@"C:\sounds\alert.wav");
 if (sound.IsValid)
