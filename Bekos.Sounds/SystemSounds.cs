@@ -2,6 +2,10 @@ using Microsoft.Win32;
 
 namespace Bekos.Sounds;
 
+/// <summary>
+/// Provides lazy-loaded static properties for all known Windows system sound events.
+/// Each property resolves its WAV path from the registry on first access.
+/// </summary>
 public static class SystemSounds
 {
     // NOTE: Base registry path where Windows stores sound event entries per user.
