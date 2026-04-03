@@ -1,59 +1,25 @@
 using Microsoft.Win32;
-using System.Media;
 
 namespace Bekos.Sounds;
 
-public class SystemSound : IDisposable
+public class SystemSound : Sound
 {
-    public string? SystemName { get; }
-    public string? Path { get; }
-    public bool IsValid { get; }
+    public string EventName { get; }
+    public string? SoundName { get; }
 
-    public SystemSound(string systemName)
+    public SystemSound(string eventName) : base(ResolvePathFromRegistry(eventName))
+    {
+        EventName = eventName;
+
+        if (Path is not null)
+            SoundName = System.IO.Path.GetFileNameWithoutExtension(Path);
+    }
+
+    private static string? ResolvePathFromRegistry(string eventName)
     {
         // NOTE: Windows stores sound event file paths under this registry key per user.
-        var key = $@"AppEvents\Schemes\Apps\.Default\{systemName}\.Default";
+        var key = $@"AppEvents\Schemes\Apps\.Default\{eventName}\.Default";
         using var reg = Registry.CurrentUser.OpenSubKey(key);
-
-        Path = reg?.GetValue(string.Empty)?.ToString();
-        if (Path is null) return;
-
-        SystemName = System.IO.Path.GetFileNameWithoutExtension(Path);
-
-        IsValid = true;
-    }
-
-    private SoundPlayer? _soundPlayer;
-    public void Play()
-    {
-        if (!IsValid) return;
-
-        _soundPlayer ??= new SoundPlayer(Path!);
-        _soundPlayer.Play();
-    }
-
-    public void PlayLooping()
-    {
-        if (!IsValid) return;
-
-        _soundPlayer ??= new SoundPlayer(Path!);
-        _soundPlayer.PlayLooping();
-    }
-
-    public void PlaySync()
-    {
-        if (!IsValid) return;
-
-        _soundPlayer ??= new SoundPlayer(Path!);
-        _soundPlayer.PlaySync();
-    }
-
-    public void Stop() => _soundPlayer?.Stop();
-
-    public void Dispose()
-    {
-        Stop();
-        _soundPlayer?.Dispose();
-        _soundPlayer = null;
+        return reg?.GetValue(string.Empty)?.ToString();
     }
 }

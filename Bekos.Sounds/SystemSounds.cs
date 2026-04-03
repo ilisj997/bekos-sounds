@@ -1,7 +1,39 @@
+using Microsoft.Win32;
+
 namespace Bekos.Sounds;
 
 public static class SystemSounds
 {
+    // NOTE: Base registry path where Windows stores sound event entries per user.
+    private const string RegistryBasePath = @"AppEvents\Schemes\Apps\.Default";
+
+    /// <summary>
+    /// Returns all system sound events that have a WAV file assigned on this machine.
+    /// </summary>
+    public static IEnumerable<SystemSound> GetAll()
+    {
+        using var baseKey = Registry.CurrentUser.OpenSubKey(RegistryBasePath);
+        if (baseKey is null) yield break;
+
+        foreach (var eventName in baseKey.GetSubKeyNames())
+        {
+            var sound = new SystemSound(eventName);
+            if (sound.IsValid)
+                yield return sound;
+        }
+    }
+
+    /// <summary>
+    /// Returns true if the given event name has a WAV file assigned on this machine.
+    /// </summary>
+    public static bool Exists(string eventName)
+    {
+        using var key = Registry.CurrentUser.OpenSubKey($@"{RegistryBasePath}\{eventName}\.Default");
+        var path = key?.GetValue(string.Empty)?.ToString();
+        return !string.IsNullOrEmpty(path);
+    }
+
+
     private static SystemSound? _deviceConnect;
     public static SystemSound DeviceConnect => _deviceConnect ??= new SystemSound("DeviceConnect");
 
@@ -12,12 +44,39 @@ public static class SystemSounds
     public static SystemSound DeviceFail => _deviceFail ??= new SystemSound("DeviceFail");
 
 
+    private static SystemSound? _beep;
+    public static SystemSound Beep => _beep ??= new SystemSound(".Default");
+
     private static SystemSound? _warning;
     public static SystemSound Warning => _warning ??= new SystemSound("SystemExclamation");
 
     private static SystemSound? _error;
     public static SystemSound Error => _error ??= new SystemSound("SystemHand");
 
+    private static SystemSound? _asterisk;
+    public static SystemSound Asterisk => _asterisk ??= new SystemSound("SystemAsterisk");
+
+    private static SystemSound? _question;
+    public static SystemSound Question => _question ??= new SystemSound("SystemQuestion");
+
+    private static SystemSound? _notification;
+    public static SystemSound Notification => _notification ??= new SystemSound("SystemNotification");
+
+
+    private static SystemSound? _printComplete;
+    public static SystemSound PrintComplete => _printComplete ??= new SystemSound("PrintComplete");
+
+    private static SystemSound? _menuCommand;
+    public static SystemSound MenuCommand => _menuCommand ??= new SystemSound("MenuCommand");
+
+    private static SystemSound? _menuPopup;
+    public static SystemSound MenuPopup => _menuPopup ??= new SystemSound("MenuPopup");
+
+    private static SystemSound? _lowBattery;
+    public static SystemSound LowBattery => _lowBattery ??= new SystemSound("LowBatteryAlarm");
+
+    private static SystemSound? _criticalBattery;
+    public static SystemSound CriticalBattery => _criticalBattery ??= new SystemSound("CriticalBatteryAlarm");
 
     private static SystemSound? _mail;
     public static SystemSound Mail => _mail ??= new SystemSound("MailBeep");
@@ -42,6 +101,9 @@ public static class SystemSounds
 
     private static SystemSound? _logon;
     public static SystemSound Logon => _logon ??= new SystemSound("WindowsLogon");
+
+    private static SystemSound? _logoff;
+    public static SystemSound Logoff => _logoff ??= new SystemSound("WindowsLogoff");
 
     private static SystemSound? _accountControl;
     public static SystemSound AccountControl => _accountControl ??= new SystemSound("WindowsUAC");
@@ -81,33 +143,33 @@ public static class SystemSounds
     public static SystemSound Alarm10 => _alarm10 ??= new SystemSound("Notification.Looping.Alarm10");
 
 
-    private static SystemSound? _ring1;
-    public static SystemSound Ring1 => _ring1 ??= new SystemSound("Notification.Looping.Call");
+    private static SystemSound? _call1;
+    public static SystemSound Call1 => _call1 ??= new SystemSound("Notification.Looping.Call");
 
-    private static SystemSound? _ring2;
-    public static SystemSound Ring2 => _ring2 ??= new SystemSound("Notification.Looping.Call2");
+    private static SystemSound? _call2;
+    public static SystemSound Call2 => _call2 ??= new SystemSound("Notification.Looping.Call2");
 
-    private static SystemSound? _ring3;
-    public static SystemSound Ring3 => _ring3 ??= new SystemSound("Notification.Looping.Call3");
+    private static SystemSound? _call3;
+    public static SystemSound Call3 => _call3 ??= new SystemSound("Notification.Looping.Call3");
 
-    private static SystemSound? _ring4;
-    public static SystemSound Ring4 => _ring4 ??= new SystemSound("Notification.Looping.Call4");
+    private static SystemSound? _call4;
+    public static SystemSound Call4 => _call4 ??= new SystemSound("Notification.Looping.Call4");
 
-    private static SystemSound? _ring5;
-    public static SystemSound Ring5 => _ring5 ??= new SystemSound("Notification.Looping.Call5");
+    private static SystemSound? _call5;
+    public static SystemSound Call5 => _call5 ??= new SystemSound("Notification.Looping.Call5");
 
-    private static SystemSound? _ring6;
-    public static SystemSound Ring6 => _ring6 ??= new SystemSound("Notification.Looping.Call6");
+    private static SystemSound? _call6;
+    public static SystemSound Call6 => _call6 ??= new SystemSound("Notification.Looping.Call6");
 
-    private static SystemSound? _ring7;
-    public static SystemSound Ring7 => _ring7 ??= new SystemSound("Notification.Looping.Call7");
+    private static SystemSound? _call7;
+    public static SystemSound Call7 => _call7 ??= new SystemSound("Notification.Looping.Call7");
 
-    private static SystemSound? _ring8;
-    public static SystemSound Ring8 => _ring8 ??= new SystemSound("Notification.Looping.Call8");
+    private static SystemSound? _call8;
+    public static SystemSound Call8 => _call8 ??= new SystemSound("Notification.Looping.Call8");
 
-    private static SystemSound? _ring9;
-    public static SystemSound Ring9 => _ring9 ??= new SystemSound("Notification.Looping.Call9");
+    private static SystemSound? _call9;
+    public static SystemSound Call9 => _call9 ??= new SystemSound("Notification.Looping.Call9");
 
-    private static SystemSound? _ring10;
-    public static SystemSound Ring10 => _ring10 ??= new SystemSound("Notification.Looping.Call10");
+    private static SystemSound? _call10;
+    public static SystemSound Call10 => _call10 ??= new SystemSound("Notification.Looping.Call10");
 }
