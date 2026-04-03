@@ -1,18 +1,24 @@
 # Bekos.Sounds
 
 **Bekos.Sounds** is a Windows-only .NET library written in C#.
-It provides strongly-typed access to Windows system sound events, resolving each sound's file path from the registry and playing it via `SoundPlayer`.
+It provides strongly-typed access to Windows system sound events and arbitrary WAV files, resolving system sound paths from the registry and playing them via `SoundPlayer`.
 
 > ⚠️ **Platform:** This library targets Windows only. It uses `Microsoft.Win32.Registry` and `System.Media.SoundPlayer`, neither of which are available on Linux or macOS.
 
 ## Features
 - **Lazy-loaded system sounds** — All built-in Windows sound events (device connect/disconnect, warnings, alarms, ringtones, notifications, etc.) are exposed as static properties and initialized on first access.
+- **Play any WAV file** — The `Sound` class plays any `.wav` file by path, independent of the system sound registry.
 - **Multiple playback modes** — Supports fire-and-forget (`Play`), synchronous (`PlaySync`), and looping (`PlayLooping`) playback.
-- **Registry-based resolution** — Resolves each sound's `.wav` path directly from `HKCU\AppEvents\Schemes`, so it always reflects the user's current sound theme.
+- **Registry-based resolution** — Resolves each system sound's `.wav` path directly from `HKCU\AppEvents\Schemes`, so it always reflects the user's current sound theme.
+- **Registry enumeration** — `GetAll()` returns all sound events that have a WAV file assigned on the current machine.
+- **Event existence check** — `Exists()` checks whether a given sound event has a WAV file assigned without creating an instance.
+- **Safe fallback** — If a sound event has no file assigned in the registry, `IsValid` is `false` and all playback calls are no-ops.
+- **Disposable** — Both `Sound` and `SystemSound` implement `IDisposable` to release the underlying `SoundPlayer`.
 
 ## Details
-- Written in **C#**.
+- Written in **C#** targeting **.NET 10**.
 - Windows only — depends on `Microsoft.Win32.Registry` and `System.Media.SoundPlayer`.
+- Uses `UseWindowsForms` to bring in `System.Media` without an additional NuGet package.
 
 ## Usage
 
@@ -31,4 +37,17 @@ SystemSounds.Alarm1.Stop();
 
 // Dispose when done
 SystemSounds.Error.Dispose();
+
+// Play any WAV file by path
+using var sound = new Sound(@"C:\sounds\alert.wav");
+if (sound.IsValid)
+    sound.Play();
+
+// Enumerate all system sounds available on this machine
+foreach (var s in SystemSounds.GetAll())
+    Console.WriteLine($"{s.EventName} → {s.SoundName}");
+
+// Check if a sound event is assigned before using it
+if (SystemSounds.Exists("DeviceConnect"))
+    SystemSounds.DeviceConnect.Play();
 ```
